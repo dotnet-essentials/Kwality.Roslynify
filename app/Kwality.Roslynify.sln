@@ -15,6 +15,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "010. Github.", "010. Github
 		..\.github\CODEOWNERS = ..\.github\CODEOWNERS
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "700. Source.", "700. Source.", "{10F7CCB3-08B8-421D-B93C-C43EE368B475}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "800. Tests.", "800. Tests.", "{134094D5-0B64-4177-B1CB-52377101C4A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify", "Kwality.Roslynify\Kwality.Roslynify.csproj", "{F2B440F0-FB07-478C-B076-3DDB5147DD79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify.Tests", "Kwality.Roslynify.Tests\Kwality.Roslynify.Tests.csproj", "{7C336B70-C641-4496-B0A9-FA38E4F0623E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,5 +30,19 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F2B440F0-FB07-478C-B076-3DDB5147DD79} = {10F7CCB3-08B8-421D-B93C-C43EE368B475}
+		{7C336B70-C641-4496-B0A9-FA38E4F0623E} = {134094D5-0B64-4177-B1CB-52377101C4A4}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F2B440F0-FB07-478C-B076-3DDB5147DD79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2B440F0-FB07-478C-B076-3DDB5147DD79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2B440F0-FB07-478C-B076-3DDB5147DD79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2B440F0-FB07-478C-B076-3DDB5147DD79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C336B70-C641-4496-B0A9-FA38E4F0623E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C336B70-C641-4496-B0A9-FA38E4F0623E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C336B70-C641-4496-B0A9-FA38E4F0623E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C336B70-C641-4496-B0A9-FA38E4F0623E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
