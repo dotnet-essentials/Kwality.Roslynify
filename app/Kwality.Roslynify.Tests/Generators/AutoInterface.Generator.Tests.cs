@@ -24,15 +24,16 @@
 // =====================================================================================================================
 namespace Kwality.Roslynify.Tests.Generators;
 
-using Kwality.Roslynify.Generators;
+using global::Xunit;
 
-using Xunit;
+using Kwality.Roslynify.Generators;
+using Kwality.Roslynify.Tests.Xunit.Traits.Attributes;
 
 using VerifyCS
     = Kwality.Roslynify.Tests.Generators.Verifiers.CSharpSourceGeneratorVerifier<
         Roslynify.Generators.AutoInterfaceGenerator>;
 
-[Trait("Roslyn (Source Generator)", "Auto Interface")]
+[SourceGeneratorTest("Auto Interface")]
 public sealed class AutoInterfaceGeneratorTests
 {
     [Fact(DisplayName = "The \"Marker\" attribute is added unconditionally.")]
