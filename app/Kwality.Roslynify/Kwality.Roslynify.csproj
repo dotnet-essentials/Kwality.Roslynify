@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Kwality.CodeStyle" Version="*" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
   </ItemGroup>
 
 </Project>
