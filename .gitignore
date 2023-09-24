@@ -25,3 +25,12 @@
 
 # JetBrains Rider `.idea/` folder.
 /app/.idea/
+
+# Output folder(s).
+/app/src/**/bin/
+/app/src/**/obj/
+/app/tests/**/bin/
+/app/tests/**/obj/
+
+# JetBrains Rider (Personal) settings.
+/app/Kwality.Roslynify.sln.DotSettings.user
