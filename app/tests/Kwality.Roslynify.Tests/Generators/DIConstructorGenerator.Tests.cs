@@ -394,4 +394,50 @@ public sealed class DIConstructorGeneratorTests
             }
         }.Verify();
     }
+    
+    [Fact(DisplayName = "A field marked as both `static` and `readonly` is NOT injected.")]
+    public void A_field_marked_as_both_static_and_readonly_is_not_injected()
+    {
+        // Arrange, act & assert.
+        new SourceGeneratorVerifier<DIConstructorGenerator>
+        {
+            InputSource = """
+                          namespace Lib;
+                           
+                          public partial struct Parent
+                          {
+                              [DIConstructor]
+                              public partial class UserManager
+                              {
+                                  public interface IUserStore { }
+                                  public interface IFileSystem { }
+                              
+                                  private readonly IUserStore _userStore;
+                                  private readonly IFileSystem _fileSystem;
+                                  private readonly static int S = 4;
+                              }
+                          }
+                          """,
+            GeneratedSources = new[]
+            {
+                """
+                namespace Lib;
+
+                partial struct Parent
+                {
+                    partial class UserManager
+                    {
+                        public UserManager(global::Lib.Parent.UserManager.IUserStore @userStore, global::Lib.Parent.UserManager.IFileSystem @fileSystem)
+                        {
+                            this._userStore = @userStore;
+                            this._fileSystem = @fileSystem;
+                        }
+                    }
+                }
+
+                """,
+                markerAttribute
+            }
+        }.Verify();
+    }
 }
