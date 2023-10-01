@@ -43,7 +43,7 @@ public sealed class DIConstructorGeneratorTests
                                            }
                                            """;
 
-    [Fact(DisplayName = "The \"marker\" attribute is added.")]
+    [Fact(DisplayName = "The `marker` attribute is added.")]
     public void The_marker_attribute_is_added()
     {
         // Arrange, act & assert.
@@ -53,8 +53,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "No code is added for types that aren't marked as \"partial\".")]
-    public void No_code_is_added_for_types_that_are_not_marked_as_partial()
+    [Fact(DisplayName = "A NON `partial` class (with the `marker` attribute) does NOT generate any code.")]
+    public void A_non_partial_class_with_the_marker_attribute_does_not_generate_code()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -74,8 +74,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "No code is added for `partial` types that aren't marked with the `marker` attribute.")]
-    public void No_code_is_added_for_partial_types_that_are_not_marked_with_the_marker_attribute()
+    [Fact(DisplayName = "A `partial` class (without the `marker` attribute) does NOT generate any code.")]
+    public void A_partial_class_without_the_marker_attribute_does_not_generate_code()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -94,8 +94,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "No code is added for `partial` types that are nested in NON `partial` types.")]
-    public void No_code_is_added_for_partial_types_that_are_nested_in_non_partial_types()
+    [Fact(DisplayName = "A class inside a NON `partial` class does NOT generate any code.")]
+    public void A_class_inside_a_non_partial_class_does_not_generate_code()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -118,8 +118,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A `partial` class is added for a class that doesn't contain fields.")]
-    public void A_partial_class_is_added_for_a_class_that_does_not_contain_fields()
+    [Fact(DisplayName = "A class without any fields does generate an empty class.")]
+    public void A_class_without_any_fields_does_generate_an_empty_class()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -147,8 +147,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A constructor is added when using the \"short\" attribute name.")]
-    public void A_constructor_is_added_when_using_the_short_attribute_name()
+    [Fact(DisplayName = "A class is with the `short` attribute name does generate a class.")]
+    public void A_class_with_the_short_attribute_name_does_generate_a_class()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -159,11 +159,6 @@ public sealed class DIConstructorGeneratorTests
                           [DIConstructor]
                           public partial class UserManager
                           {
-                              public interface IUserStore { }
-                              public interface IFileSystem { }
-                              
-                              private readonly IUserStore _userStore;
-                              private readonly IFileSystem _fileSystem;
                           }
                           """,
             GeneratedSources = new[]
@@ -173,11 +168,6 @@ public sealed class DIConstructorGeneratorTests
 
                 partial class UserManager
                 {
-                    public UserManager(global::Lib.UserManager.IUserStore @userStore, global::Lib.UserManager.IFileSystem @fileSystem)
-                    {
-                        this._userStore = @userStore;
-                        this._fileSystem = @fileSystem;
-                    }
                 }
 
                 """,
@@ -186,8 +176,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A constructor is added when using the \"long\" attribute name.")]
-    public void A_constructor_is_added_when_using_the_long_attribute_name()
+    [Fact(DisplayName = "A class is with the `long` attribute name does generate a class.")]
+    public void A_class_with_the_long_attribute_name_does_generate_a_class()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -198,11 +188,6 @@ public sealed class DIConstructorGeneratorTests
                           [DIConstructorAttribute]
                           public partial class UserManager
                           {
-                              public interface IUserStore { }
-                              public interface IFileSystem { }
-                              
-                              private readonly IUserStore _userStore;
-                              private readonly IFileSystem _fileSystem;
                           }
                           """,
             GeneratedSources = new[]
@@ -212,11 +197,6 @@ public sealed class DIConstructorGeneratorTests
 
                 partial class UserManager
                 {
-                    public UserManager(global::Lib.UserManager.IUserStore @userStore, global::Lib.UserManager.IFileSystem @fileSystem)
-                    {
-                        this._userStore = @userStore;
-                        this._fileSystem = @fileSystem;
-                    }
                 }
 
                 """,
@@ -225,8 +205,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A constructor is added when the type is NOT contained inside a namespace.")]
-    public void A_constructor_is_added_when_the_type_is_not_contained_inside_a_namespace()
+    [Fact(DisplayName = "A class in the `global` namespace does generate a class.")]
+    public void A_class_in_the_global_namespace_does_generate_a_class()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -235,11 +215,6 @@ public sealed class DIConstructorGeneratorTests
                           [DIConstructorAttribute]
                           public partial class UserManager
                           {
-                              public interface IUserStore { }
-                              public interface IFileSystem { }
-                              
-                              private readonly IUserStore _userStore;
-                              private readonly IFileSystem _fileSystem;
                           }
                           """,
             GeneratedSources = new[]
@@ -247,11 +222,6 @@ public sealed class DIConstructorGeneratorTests
                 """
                 partial class UserManager
                 {
-                    public UserManager(global::UserManager.IUserStore @userStore, global::UserManager.IFileSystem @fileSystem)
-                    {
-                        this._userStore = @userStore;
-                        this._fileSystem = @fileSystem;
-                    }
                 }
 
                 """,
@@ -260,8 +230,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A constructor is added for a class \"nested\" in another class.")]
-    public void A_constructor_is_added_for_a_class_nested_in_another_class()
+    [Fact(DisplayName = "A class inside a class does generate a class.")]
+    public void A_class_inside_a_class_does_generate_a_class()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -274,11 +244,6 @@ public sealed class DIConstructorGeneratorTests
                               [DIConstructor]
                               public partial class UserManager
                               {
-                                  public interface IUserStore { }
-                                  public interface IFileSystem { }
-                              
-                                  private readonly IUserStore _userStore;
-                                  private readonly IFileSystem _fileSystem;
                               }
                           }
                           """,
@@ -291,11 +256,6 @@ public sealed class DIConstructorGeneratorTests
                 {
                     partial class UserManager
                     {
-                        public UserManager(global::Lib.Parent.UserManager.IUserStore @userStore, global::Lib.Parent.UserManager.IFileSystem @fileSystem)
-                        {
-                            this._userStore = @userStore;
-                            this._fileSystem = @fileSystem;
-                        }
                     }
                 }
 
@@ -305,8 +265,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A constructor is added for a class \"nested\" in an interfaces.")]
-    public void A_constructor_is_added_for_a_class_nested_in_an_interface()
+    [Fact(DisplayName = "A class inside an interface does generate a class.")]
+    public void A_class_inside_an_interface_does_generate_a_class()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -319,11 +279,6 @@ public sealed class DIConstructorGeneratorTests
                               [DIConstructor]
                               public partial class UserManager
                               {
-                                  public interface IUserStore { }
-                                  public interface IFileSystem { }
-                              
-                                  private readonly IUserStore _userStore;
-                                  private readonly IFileSystem _fileSystem;
                               }
                           }
                           """,
@@ -336,11 +291,6 @@ public sealed class DIConstructorGeneratorTests
                 {
                     partial class UserManager
                     {
-                        public UserManager(global::Lib.Parent.UserManager.IUserStore @userStore, global::Lib.Parent.UserManager.IFileSystem @fileSystem)
-                        {
-                            this._userStore = @userStore;
-                            this._fileSystem = @fileSystem;
-                        }
                     }
                 }
 
@@ -350,8 +300,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A constructor is added for a class \"nested\" in a struct.")]
-    public void A_constructor_is_added_for_a_class_nested_in_a_struct()
+    [Fact(DisplayName = "A class inside a struct does generate a class.")]
+    public void A_class_inside_a_struct_does_generate_a_class()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -364,11 +314,6 @@ public sealed class DIConstructorGeneratorTests
                               [DIConstructor]
                               public partial class UserManager
                               {
-                                  public interface IUserStore { }
-                                  public interface IFileSystem { }
-                              
-                                  private readonly IUserStore _userStore;
-                                  private readonly IFileSystem _fileSystem;
                               }
                           }
                           """,
@@ -381,11 +326,42 @@ public sealed class DIConstructorGeneratorTests
                 {
                     partial class UserManager
                     {
-                        public UserManager(global::Lib.Parent.UserManager.IUserStore @userStore, global::Lib.Parent.UserManager.IFileSystem @fileSystem)
-                        {
-                            this._userStore = @userStore;
-                            this._fileSystem = @fileSystem;
-                        }
+                    }
+                }
+
+                """,
+                markerAttribute
+            }
+        }.Verify();
+    }
+
+    [Fact(DisplayName = "Fields (`readonly`) are injected in the constructor.")]
+    public void Readonly_fields_are_injected_in_the_constructor()
+    {
+        // Arrange, act & assert.
+        new SourceGeneratorVerifier<DIConstructorGenerator>
+        {
+            InputSource = """
+                          namespace Lib;
+                           
+                          [DIConstructor]
+                          public partial class UserManager
+                          {
+                              public interface IUserStore { }
+                          
+                              private readonly IUserStore _userStore;
+                          }
+                          """,
+            GeneratedSources = new[]
+            {
+                """
+                namespace Lib;
+
+                partial class UserManager
+                {
+                    public UserManager(global::Lib.UserManager.IUserStore @userStore)
+                    {
+                        this._userStore = @userStore;
                     }
                 }
 
@@ -395,8 +371,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
     
-    [Fact(DisplayName = "A field marked as both `static` and `readonly` is NOT injected.")]
-    public void A_field_marked_as_both_static_and_readonly_is_not_injected()
+    [Fact(DisplayName = "Fields (`static`, `readonly`) are NOT injected in the constructor.")]
+    public void Static_readonly_fields_are_injected_in_the_constructor()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -404,18 +380,13 @@ public sealed class DIConstructorGeneratorTests
             InputSource = """
                           namespace Lib;
                            
-                          public partial struct Parent
+                          [DIConstructor]
+                          public partial class UserManager
                           {
-                              [DIConstructor]
-                              public partial class UserManager
-                              {
-                                  public interface IUserStore { }
-                                  public interface IFileSystem { }
-                              
-                                  private readonly IUserStore _userStore;
-                                  private readonly IFileSystem _fileSystem;
-                                  private readonly static int S = 4;
-                              }
+                              public interface IUserStore { }
+                          
+                              private readonly IUserStore _userStore;
+                              private static readonly int S = 10;
                           }
                           """,
             GeneratedSources = new[]
@@ -423,15 +394,11 @@ public sealed class DIConstructorGeneratorTests
                 """
                 namespace Lib;
 
-                partial struct Parent
+                partial class UserManager
                 {
-                    partial class UserManager
+                    public UserManager(global::Lib.UserManager.IUserStore @userStore)
                     {
-                        public UserManager(global::Lib.Parent.UserManager.IUserStore @userStore, global::Lib.Parent.UserManager.IFileSystem @fileSystem)
-                        {
-                            this._userStore = @userStore;
-                            this._fileSystem = @fileSystem;
-                        }
+                        this._userStore = @userStore;
                     }
                 }
 
