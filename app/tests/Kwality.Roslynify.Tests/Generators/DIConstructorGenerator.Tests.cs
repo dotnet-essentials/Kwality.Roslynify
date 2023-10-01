@@ -405,7 +405,7 @@ public sealed class DIConstructorGeneratorTests
     }
 
     [Fact(DisplayName = "Fields (`static`, `readonly`) are NOT injected in the constructor.")]
-    public void Static_readonly_fields_are_injected_in_the_constructor()
+    public void Static_readonly_fields_are_not_injected_in_the_constructor()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
