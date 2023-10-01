@@ -74,7 +74,8 @@ public sealed class Type
 
     private void WriteClass(StringBuilder sBuilder, string prefix)
     {
-        var constructorArgs = this.symbol.GetFields().ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter())
+        var constructorArgs = this.symbol.GetFields()
+            .ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter(), new IsNotInitializedFilter())
             .Select(x => new Argument(x)).ToList();
 
         sBuilder.AppendLine($"{prefix}partial class {this.symbol.Name}");

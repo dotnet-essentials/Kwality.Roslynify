@@ -444,6 +444,46 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
     
+    [Fact(DisplayName = "Fields (`readonly`, initialized) are NOT injected in the constructor.")]
+    public void Initialized_readonly_fields_are_not_injected_in_the_constructor()
+    {
+        // Arrange, act & assert.
+        new SourceGeneratorVerifier<DIConstructorGenerator>
+        {
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+                 
+                [DIConstructor]
+                public partial class UserManager
+                {
+                    public interface IUserStore { }
+                
+                    private readonly IUserStore _userStore;
+                    private readonly int S = 10;
+                }
+                """
+            },
+            GeneratedSources = new[]
+            {
+                """
+                namespace Lib;
+
+                partial class UserManager
+                {
+                    public UserManager(global::Lib.UserManager.IUserStore @userStore)
+                    {
+                        this._userStore = @userStore;
+                    }
+                }
+
+                """,
+                markerAttribute
+            }
+        }.Verify();
+    }
+    
     [Fact(DisplayName = "Fields defined in all `partial` types are injected in the constructor.")]
     public void Fields_defined_all_partial_types_are_injected()
     {
