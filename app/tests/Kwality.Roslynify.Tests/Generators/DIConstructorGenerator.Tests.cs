@@ -49,7 +49,7 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = string.Empty, GeneratedSources = new[] { markerAttribute }
+            InputSources = new [] { string.Empty }, GeneratedSources = new[] { markerAttribute }
         }.Verify();
     }
 
@@ -59,17 +59,20 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
 
-                          [DIConstructor]
-                          public class UserManager
-                          {
-                              public interface IUserStore { }
-                              
-                              private readonly IUserStore _userStore;
-                          }
-                          """,
+                [DIConstructor]
+                public class UserManager
+                {
+                    public interface IUserStore { }
+                    
+                    private readonly IUserStore _userStore;
+                }
+                """
+            },
             GeneratedSources = new[] { markerAttribute }
         }.Verify();
     }
@@ -80,16 +83,19 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
 
-                          public partial class UserManager
-                          {
-                              public interface IUserStore { }
-                              
-                              private readonly IUserStore _userStore;
-                          }
-                          """,
+                public partial class UserManager
+                {
+                    public interface IUserStore { }
+                    
+                    private readonly IUserStore _userStore;
+                }
+                """
+            },
             GeneratedSources = new[] { markerAttribute }
         }.Verify();
     }
@@ -100,20 +106,23 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
 
-                          public class Parent
-                          {
-                              [DIConstructor]
-                              public partial class UserManager
-                              {
-                                  public interface IUserStore { }
-                                  
-                                  private readonly IUserStore _userStore;
-                              }
-                          }
-                          """,
+                public class Parent
+                {
+                    [DIConstructor]
+                    public partial class UserManager
+                    {
+                        public interface IUserStore { }
+                        
+                        private readonly IUserStore _userStore;
+                    }
+                }
+                """
+            },
             GeneratedSources = new[] { markerAttribute }
         }.Verify();
     }
@@ -124,14 +133,17 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
 
-                          [DIConstructor]
-                          public partial class UserManager
-                          {
-                          }
-                          """,
+                [DIConstructor]
+                public partial class UserManager
+                {
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -153,14 +165,17 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
 
-                          [DIConstructor]
-                          public partial class UserManager
-                          {
-                          }
-                          """,
+                [DIConstructor]
+                public partial class UserManager
+                {
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -182,14 +197,17 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
 
-                          [DIConstructorAttribute]
-                          public partial class UserManager
-                          {
-                          }
-                          """,
+                [DIConstructorAttribute]
+                public partial class UserManager
+                {
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -211,12 +229,15 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          [DIConstructorAttribute]
-                          public partial class UserManager
-                          {
-                          }
-                          """,
+            InputSources = new[]
+            {
+                """
+                [DIConstructorAttribute]
+                public partial class UserManager
+                {
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -236,17 +257,20 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
-                           
-                          public partial class Parent
-                          {
-                              [DIConstructor]
-                              public partial class UserManager
-                              {
-                              }
-                          }
-                          """,
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+                 
+                public partial class Parent
+                {
+                    [DIConstructor]
+                    public partial class UserManager
+                    {
+                    }
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -271,17 +295,20 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
-                           
-                          public partial interface Parent
-                          {
-                              [DIConstructor]
-                              public partial class UserManager
-                              {
-                              }
-                          }
-                          """,
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+                 
+                public partial interface Parent
+                {
+                    [DIConstructor]
+                    public partial class UserManager
+                    {
+                    }
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -306,17 +333,20 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
-                           
-                          public partial struct Parent
-                          {
-                              [DIConstructor]
-                              public partial class UserManager
-                              {
-                              }
-                          }
-                          """,
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+                 
+                public partial struct Parent
+                {
+                    [DIConstructor]
+                    public partial class UserManager
+                    {
+                    }
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -341,17 +371,60 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
-                           
-                          [DIConstructor]
-                          public partial class UserManager
-                          {
-                              public interface IUserStore { }
-                          
-                              private readonly IUserStore _userStore;
-                          }
-                          """,
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+                 
+                [DIConstructor]
+                public partial class UserManager
+                {
+                    public interface IUserStore { }
+                
+                    private readonly IUserStore _userStore;
+                }
+                """
+            },
+            GeneratedSources = new[]
+            {
+                """
+                namespace Lib;
+
+                partial class UserManager
+                {
+                    public UserManager(global::Lib.UserManager.IUserStore @userStore)
+                    {
+                        this._userStore = @userStore;
+                    }
+                }
+
+                """,
+                markerAttribute
+            }
+        }.Verify();
+    }
+
+    [Fact(DisplayName = "Fields (`static`, `readonly`) are NOT injected in the constructor.")]
+    public void Static_readonly_fields_are_injected_in_the_constructor()
+    {
+        // Arrange, act & assert.
+        new SourceGeneratorVerifier<DIConstructorGenerator>
+        {
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+                 
+                [DIConstructor]
+                public partial class UserManager
+                {
+                    public interface IUserStore { }
+                
+                    private readonly IUserStore _userStore;
+                    private static readonly int S = 10;
+                }
+                """
+            },
             GeneratedSources = new[]
             {
                 """
@@ -371,24 +444,37 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
     
-    [Fact(DisplayName = "Fields (`static`, `readonly`) are NOT injected in the constructor.")]
-    public void Static_readonly_fields_are_injected_in_the_constructor()
+    [Fact(DisplayName = "Fields defined in all `partial` types are injected in the constructor.")]
+    public void Fields_defined_all_partial_types_are_injected()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSource = """
-                          namespace Lib;
-                           
-                          [DIConstructor]
-                          public partial class UserManager
-                          {
-                              public interface IUserStore { }
-                          
-                              private readonly IUserStore _userStore;
-                              private static readonly int S = 10;
-                          }
-                          """,
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+                 
+                [DIConstructor]
+                public partial class UserManager
+                {
+                    public interface IUserStore { }
+                
+                    private readonly IUserStore _userStore;
+                }
+                """,
+                """
+                namespace Lib;
+                 
+                [DIConstructor]
+                public partial class UserManager
+                {
+                    public interface ITimeProvider { }
+                
+                    private readonly ITimeProvider _timeProvider;
+                }
+                """,
+            },
             GeneratedSources = new[]
             {
                 """
@@ -396,9 +482,10 @@ public sealed class DIConstructorGeneratorTests
 
                 partial class UserManager
                 {
-                    public UserManager(global::Lib.UserManager.IUserStore @userStore)
+                    public UserManager(global::Lib.UserManager.IUserStore @userStore, global::Lib.UserManager.ITimeProvider @timeProvider)
                     {
                         this._userStore = @userStore;
+                        this._timeProvider = @timeProvider;
                     }
                 }
 

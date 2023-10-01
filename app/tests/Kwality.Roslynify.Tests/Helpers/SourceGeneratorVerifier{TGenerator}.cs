@@ -33,14 +33,14 @@ using Xunit;
 
 internal sealed class SourceGeneratorVerifier<TGenerator> where TGenerator : IIncrementalGenerator, new()
 {
-    internal string? InputSource { get; init; }
+    internal string[]? InputSources { get; init; }
     internal string[]? GeneratedSources { get; init; }
 
     public void Verify()
     {
         // Arrange.
         var compilation = CSharpCompilation.Create("Lib",
-            new[] { CSharpSyntaxTree.ParseText(this.InputSource ?? string.Empty) },
+            (this.InputSources ?? Array.Empty<string>()).Select(x => CSharpSyntaxTree.ParseText(x)),
             new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
@@ -52,9 +52,8 @@ internal sealed class SourceGeneratorVerifier<TGenerator> where TGenerator : IIn
 
         // Assert.
         Assert.Empty(diagnostics);
-        Assert.Equal(1 + this.GeneratedSources?.Length, result.SyntaxTrees.Count());
 
         foreach (var generatedSource in this.GeneratedSources ?? Array.Empty<string>())
-            Assert.Contains(result.SyntaxTrees.Skip(1), x => x.ToString() == generatedSource);
+            Assert.Contains(result.SyntaxTrees, x => x.ToString() == generatedSource);
     }
 }

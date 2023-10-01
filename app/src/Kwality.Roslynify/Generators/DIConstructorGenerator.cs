@@ -43,6 +43,8 @@ using Microsoft.CodeAnalysis.Text;
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class DIConstructorGenerator : IIncrementalGenerator
 {
+    private readonly HashSet<string> generatedFiles = new();
+    
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Add the "marker" attribute.
@@ -97,7 +99,7 @@ public sealed class DIConstructorGenerator : IIncrementalGenerator
         }
     }
 
-    private static void GenerateSymbolSource(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
+    private void GenerateSymbolSource(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
     {
         if (types.IsDefaultOrEmpty) return;
 
@@ -122,13 +124,17 @@ public sealed class DIConstructorGenerator : IIncrementalGenerator
         return parentName;
     }
 
-    private static void AddSymbolSource(SourceProductionContext context, ITypeSymbol symbol)
+    private void AddSymbolSource(SourceProductionContext context, ITypeSymbol symbol)
     {
         var (fileName, @namespace) = symbol.GetNamespace() is { } symbolNamespace
             ? ($"{symbolNamespace}.{symbol.Name}.g.cs", symbolNamespace)
             : ($"{symbol.Name}.g.cs", null);
 
         var sourceFile = new File(@namespace, GetNestedTypeName(symbol));
+
+        if (this.generatedFiles.Contains(fileName)) return;
+
         context.AddSource(fileName, SourceText.From(sourceFile.ToString(), Encoding.UTF8));
+        this.generatedFiles.Add(fileName);
     }
 }
