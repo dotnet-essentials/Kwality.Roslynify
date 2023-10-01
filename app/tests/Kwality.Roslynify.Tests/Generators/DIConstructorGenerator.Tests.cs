@@ -485,7 +485,7 @@ public sealed class DIConstructorGeneratorTests
     }
     
     [Fact(DisplayName = "Fields defined in all `partial` types are injected in the constructor.")]
-    public void Fields_defined_all_partial_types_are_injected()
+    public void Fields_defined_in_all_partial_types_are_injected()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
