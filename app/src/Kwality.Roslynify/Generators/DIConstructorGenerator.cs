@@ -31,6 +31,7 @@ using System.Text;
 using Kwality.Roslynify.Common.Constraints.Roslyn.Node;
 using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Attribute;
 using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Type;
+using Kwality.Roslynify.Common.Extensions.Roslyn.Context;
 using Kwality.Roslynify.Common.Extensions.Roslyn.Symbol;
 using Kwality.Roslynify.Common.Extensions.Roslyn.Syntax.Attribute;
 using Kwality.Roslynify.Common.Models.Output;
@@ -128,7 +129,6 @@ public sealed class DIConstructorGenerator : IIncrementalGenerator
             ? ($"{symbolNamespace}.{symbol.Name}.g.cs", symbolNamespace)
             : ($"{symbol.Name}.g.cs", null);
 
-        var sourceFile = new File(@namespace, GetNestedTypeName(symbol));
-        context.AddSource(fileName, SourceText.From(sourceFile.ToString(), Encoding.UTF8));
+        context.AddFile(new File(fileName, @namespace, GetNestedTypeName(symbol)));
     }
 }

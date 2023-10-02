@@ -22,36 +22,19 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Common.Models.Output;
+namespace Kwality.Roslynify.Common.Extensions.Roslyn.Context;
 
 using System.Text;
 
-public sealed class File
+using Kwality.Roslynify.Common.Models.Output;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
+
+public static class SourceProductionContextExtensions
 {
-    private readonly string @namespace;
-    private readonly Type type;
-
-    public File(string name, string? @namespace, Type type)
+    public static void AddFile(this SourceProductionContext context, File file)
     {
-        this.Name = name;
-        this.@namespace = @namespace ?? string.Empty;
-        this.type = type;
-    }
-
-    public string Name { get; }
-
-    public override string ToString()
-    {
-        var sBuilder = new StringBuilder();
-
-        if (!string.IsNullOrEmpty(this.@namespace))
-        {
-            sBuilder.AppendLine($"namespace {this.@namespace};");
-            sBuilder.AppendLine("");
-        }
-
-        sBuilder.AppendLine(this.type.ToString());
-
-        return sBuilder.ToString();
+        context.AddSource(file.Name, SourceText.From(file.ToString(), Encoding.UTF8));
     }
 }
