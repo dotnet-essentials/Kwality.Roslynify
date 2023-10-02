@@ -76,38 +76,48 @@ public sealed class Type
 
     private void WriteClass(StringBuilder sBuilder, string prefix)
     {
-        var baseCtorParameters = Enumerable.Empty<Argument>();
-
-        var constructors = this.symbol.BaseType?.Constructors
-            .ApplyFilters(new IsNotStaticFilter(), new HasParametersFilter()).ToList();
-
-        if (constructors != null)
-        {
-            var constructor = constructors.Any() && constructors.Count > 1 ? null : constructors.FirstOrDefault();
-            if (constructor != null) baseCtorParameters = constructor.Parameters.Select(p => new Argument(p));
-        }
-
-        var constructorArgs = this.symbol.GetFields()
-            .ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter(), new IsNotInitializedFilter())
-            .Select(x => new Argument(x)).ToList();
-
+        var constructorArguments = this.GetConstructorArguments();
+        var baseConstructorArguments = this.GetBaseConstructorArguments();
         sBuilder.AppendLine($"{prefix}partial class {this.symbol.Name}");
         sBuilder.AppendLine($"{prefix}{{");
 
-        if (constructorArgs is not { Count: > 0 }) return;
+        if (constructorArguments is not { Count: > 0 }) return;
 
-        if (baseCtorParameters.Any())
+        if (baseConstructorArguments.Any())
         {
-            var args = constructorArgs.Concat(baseCtorParameters);
+            var args = constructorArguments.Concat(baseConstructorArguments);
             sBuilder.AppendLine($"{prefix}    public {this.symbol.Name}({string.Join(", ", args)})");
-            sBuilder.AppendLine($"{prefix}        : base({string.Join(", ", baseCtorParameters.Select(x => x.Name))})");
+
+            sBuilder.AppendLine(
+                $"{prefix}        : base({string.Join(", ", baseConstructorArguments.Select(x => x.Name))})");
         }
         else
-            sBuilder.AppendLine($"{prefix}    public {this.symbol.Name}({string.Join(", ", constructorArgs)})");
+            sBuilder.AppendLine($"{prefix}    public {this.symbol.Name}({string.Join(", ", constructorArguments)})");
 
         sBuilder.AppendLine($"{prefix}    {{");
-        foreach (var arg in constructorArgs) sBuilder.AppendLine($"{prefix}        this.{arg.FieldName} = {arg.Name};");
+
+        foreach (var arg in constructorArguments)
+            sBuilder.AppendLine($"{prefix}        this.{arg.FieldName} = {arg.Name};");
+
         sBuilder.AppendLine($"{prefix}    }}");
+    }
+
+    private IList<Argument> GetConstructorArguments()
+    {
+        return this.symbol.GetFields()
+            .ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter(), new IsNotInitializedFilter())
+            .Select(x => new Argument(x)).ToList();
+    }
+
+    private IList<Argument> GetBaseConstructorArguments()
+    {
+        var constructors = this.symbol.BaseType?.Constructors
+            .ApplyFilters(new IsNotStaticFilter(), new HasParametersFilter())
+            .ToList();
+
+        var constructor = constructors?.Count <= 1 ? constructors.FirstOrDefault() : null;
+
+        return constructor?.Parameters.Select(p => new Argument(p)).ToList() ?? new List<Argument>();
     }
 
     private void WriteInterface(StringBuilder sBuilder, string prefix)
