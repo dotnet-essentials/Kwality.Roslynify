@@ -43,8 +43,8 @@ public sealed class DIConstructorGeneratorTests
                                            }
                                            """;
 
-    [Fact(DisplayName = "The `marker` attribute is added.")]
-    public void The_marker_attribute_is_added()
+    [Fact(DisplayName = "The `marker` attribute is added when using `NO` input.")]
+    public void NoInputOnlyAddsTheMarkerAttribute()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -53,8 +53,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A NON `partial` class (with the `marker` attribute) does NOT generate any code.")]
-    public void A_non_partial_class_with_the_marker_attribute_does_not_generate_code()
+    [Fact(DisplayName = "No class is generated when using a NON `partial` class with the `marker` attribute.")]
+    public void ANonPartialClassWithTheMarkerAttributeGeneratesNoClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -77,8 +77,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A `partial` class (without the `marker` attribute) does NOT generate any code.")]
-    public void A_partial_class_without_the_marker_attribute_does_not_generate_code()
+    [Fact(DisplayName = "No class is generated when using a `partial` class without the `marker` attribute.")]
+    public void APartialClassWithoutTheMarkerAttributeGeneratesNoClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -100,8 +100,9 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A class inside a NON `partial` class does NOT generate any code.")]
-    public void A_class_inside_a_non_partial_class_does_not_generate_code()
+    [Fact(DisplayName =
+        "No class is generated when using a `partial` class with the `marker` attribute inside a NON `partial` class.")]
+    public void APartialClassWithTheMarkerAttributeInsideANonPartialClassGeneratesNoClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -127,8 +128,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A class without any fields does generate an empty class.")]
-    public void A_class_without_any_fields_does_generate_an_empty_class()
+    [Fact(DisplayName = "Using the `short` version of the `marker` attribute generates a class.")]
+    public void UsingTheShortVersionOfTheMarkerAttributeGeneratesAClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -159,40 +160,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A class is with the `short` attribute name does generate a class.")]
-    public void A_class_with_the_short_attribute_name_does_generate_a_class()
-    {
-        // Arrange, act & assert.
-        new SourceGeneratorVerifier<DIConstructorGenerator>
-        {
-            InputSources = new[]
-            {
-                """
-                namespace Lib;
-
-                [DIConstructor]
-                public partial class UserManager
-                {
-                }
-                """
-            },
-            GeneratedSources = new[]
-            {
-                """
-                namespace Lib;
-
-                partial class UserManager
-                {
-                }
-
-                """,
-                markerAttribute
-            }
-        }.Verify();
-    }
-
-    [Fact(DisplayName = "A class is with the `long` attribute name does generate a class.")]
-    public void A_class_with_the_long_attribute_name_does_generate_a_class()
+    [Fact(DisplayName = "Using the `long` version of the `marker` attribute generates a class.")]
+    public void UsingTheLongVersionOfTheMarkerAttributeGeneratesAClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -223,8 +192,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A class in the `global` namespace does generate a class.")]
-    public void A_class_in_the_global_namespace_does_generate_a_class()
+    [Fact(DisplayName = "Using a class in the `global` namespace generates a class.")]
+    public void UsingAClassInTheGlobalNamespaceGeneratesAClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -251,8 +220,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A class inside a class does generate a class.")]
-    public void A_class_inside_a_class_does_generate_a_class()
+    [Fact(DisplayName = "Using a class inside a class generates a class.")]
+    public void UsingAClassInsideAClassGeneratesAClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -289,8 +258,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A class inside an interface does generate a class.")]
-    public void A_class_inside_an_interface_does_generate_a_class()
+    [Fact(DisplayName = "Using a class inside an interface generates a class.")]
+    public void UsingAClassInsideAnInterfaceGeneratesAClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -327,8 +296,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "A class inside a struct does generate a class.")]
-    public void A_class_inside_a_struct_does_generate_a_class()
+    [Fact(DisplayName = "Using a class inside a struct generates a class.")]
+    public void UsingAClassInsideAStructGeneratesAClass()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -366,7 +335,7 @@ public sealed class DIConstructorGeneratorTests
     }
 
     [Fact(DisplayName = "Fields (`readonly`) are injected in the constructor.")]
-    public void Readonly_fields_are_injected_in_the_constructor()
+    public void ReadonlyFieldsAreInjectedInTheConstructor()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -404,8 +373,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "Fields (`static`, `readonly`) are NOT injected in the constructor.")]
-    public void Static_readonly_fields_are_not_injected_in_the_constructor()
+    [Fact(DisplayName = "Fields (`readonly`, `static`) are NOT injected in the constructor.")]
+    public void ReadonlyStaticFieldsAreNotInjectedInTheConstructor()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -444,8 +413,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "Fields (`readonly`, initialized) are NOT injected in the constructor.")]
-    public void Initialized_readonly_fields_are_not_injected_in_the_constructor()
+    [Fact(DisplayName = "Fields (`readonly`, initialized) are injected in the constructor.")]
+    public void ReadonlyInitializedFieldsAreNotInjectedInTheConstructor()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -485,7 +454,7 @@ public sealed class DIConstructorGeneratorTests
     }
 
     [Fact(DisplayName = "Fields defined in all `partial` types are injected in the constructor.")]
-    public void Fields_defined_in_all_partial_types_are_injected()
+    public void FieldsDefinedInAllPartialTypesAreInjectedInTheConstructor()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
@@ -534,8 +503,8 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "The `base` constructor is called in the constructor.")]
-    public void The_base_constructor_is_called_in_generated_constructor()
+    [Fact(DisplayName = "The base constructor is called in the generated constructor.")]
+    public void TheBaseConstructorIsCalledInTheGeneratedConstructor()
     {
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
