@@ -33,8 +33,8 @@ using Xunit;
 
 internal sealed class SourceGeneratorVerifier<TGenerator> where TGenerator : IIncrementalGenerator, new()
 {
-    internal string[]? InputSources { get; init; }
-    internal string[]? GeneratedSources { get; init; }
+    public string[]? InputSources { get; init; }
+    public string[]? GeneratedSources { get; init; }
 
     public void Verify()
     {
