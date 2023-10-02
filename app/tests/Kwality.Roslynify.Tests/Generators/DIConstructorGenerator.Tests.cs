@@ -506,7 +506,6 @@ public sealed class DIConstructorGeneratorTests
                 """
                 namespace Lib;
                  
-                [DIConstructor]
                 public partial class UserManager
                 {
                     public interface ITimeProvider { }
