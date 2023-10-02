@@ -22,34 +22,17 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Tests.Helpers;
-
-using Kwality.Roslynify.Tests.Helpers.Base;
+namespace Kwality.Roslynify.Properties;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
-using Xunit;
-
-internal sealed class SourceGeneratorVerifier<TGenerator> : RoslynComponentVerifier
-    where TGenerator : IIncrementalGenerator, new()
+internal static class DiagnosticDescriptors
 {
-    public string[]? GeneratedSources { get; init; }
+    private const string CategoryUsage = "Usage";
 
-    public void Verify()
-    {
-        // Arrange.
-        var compilation = this.CreateCompilation();
-        var generator = new TGenerator();
-
-        // Act.
-        CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var result, out var diagnostics);
-
-        // Assert.
-        Assert.Empty(diagnostics);
-
-        foreach (var generatedSource in this.GeneratedSources ?? Array.Empty<string>())
-            Assert.Contains(result.SyntaxTrees, x => x.ToString() == generatedSource);
-    }
+    // ReSharper disable once InconsistentNaming
+    public static readonly DiagnosticDescriptor KW001 = new(nameof(KW001),
+        "The `DIConstructor` attribute can only be applied to `partial` classes",
+        "The class `{0}` must be defined as `partial`", CategoryUsage, DiagnosticSeverity.Error, true,
+        "The `DIConstructor` does only work when it's applied to a `partial` type.");
 }

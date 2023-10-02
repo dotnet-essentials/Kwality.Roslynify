@@ -22,34 +22,45 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Tests.Helpers;
+namespace Kwality.Roslynify.Analyzers;
 
-using Kwality.Roslynify.Tests.Helpers.Base;
+using System.Collections.Immutable;
+
+using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Attribute;
+using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Type;
+using Kwality.Roslynify.Properties;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 
-using Xunit;
-
-internal sealed class SourceGeneratorVerifier<TGenerator> : RoslynComponentVerifier
-    where TGenerator : IIncrementalGenerator, new()
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public sealed class DIConstructorAnalyzer : DiagnosticAnalyzer
 {
-    public string[]? GeneratedSources { get; init; }
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        ImmutableArray.Create(DiagnosticDescriptors.KW001);
 
-    public void Verify()
+    public override void Initialize(AnalysisContext context)
     {
-        // Arrange.
-        var compilation = this.CreateCompilation();
-        var generator = new TGenerator();
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze |
+                                               GeneratedCodeAnalysisFlags.ReportDiagnostics);
 
-        // Act.
-        CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var result, out var diagnostics);
+        context.EnableConcurrentExecution();
+        context.RegisterSyntaxNodeAction(CheckForAttributeOnPartialClass, SyntaxKind.ClassDeclaration);
+    }
 
-        // Assert.
-        Assert.Empty(diagnostics);
+    private static void CheckForAttributeOnPartialClass(SyntaxNodeAnalysisContext context)
+    {
+        var classDeclaration = (ClassDeclarationSyntax)context.Node;
+        var isPartial = new IsPartialConstraint().IsTrueFor(classDeclaration);
 
-        foreach (var generatedSource in this.GeneratedSources ?? Array.Empty<string>())
-            Assert.Contains(result.SyntaxTrees, x => x.ToString() == generatedSource);
+        var hasAttribute = classDeclaration.AttributeLists.Any(al =>
+            al.Attributes.Any(a => new HasNameConstraint("DIConstructorAttribute").IsTrueFor(a)));
+
+        if (!hasAttribute || isPartial) return;
+
+        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.KW001, classDeclaration.GetLocation(),
+            classDeclaration.Identifier.ValueText));
     }
 }

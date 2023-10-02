@@ -22,34 +22,55 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Tests.Helpers;
+namespace Kwality.Roslynify.Tests.Analyzers;
 
-using Kwality.Roslynify.Tests.Helpers.Base;
+using System.Diagnostics.CodeAnalysis;
 
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using Kwality.Roslynify.Analyzers;
+using Kwality.Roslynify.Tests.Helpers;
 
 using Xunit;
 
-internal sealed class SourceGeneratorVerifier<TGenerator> : RoslynComponentVerifier
-    where TGenerator : IIncrementalGenerator, new()
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+public sealed class DIConstructorAnalyzerTests
 {
-    public string[]? GeneratedSources { get; init; }
-
-    public void Verify()
+    [Fact(DisplayName = "Using the `short` attribute on a NON `partial` class does report a diagnostic.")]
+    public async Task UsingTheShortAttributeOnANonPartialClassReportsADiagnostic()
     {
-        // Arrange.
-        var compilation = this.CreateCompilation();
-        var generator = new TGenerator();
+        // Arrange, act & assert.
+        await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
+        {
+            InputSources = new[]
+            {
+                """
+                [DIConstructor]
+                public class UserManager { }
+                """
+            },
+            ExpectedDiagnostics = new[]
+            {
+                new DiagnosticResult("KW001", "The class `UserManager` must be defined as `partial`")
+            }
+        }.VerifyAsync();
+    }
 
-        // Act.
-        CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var result, out var diagnostics);
-
-        // Assert.
-        Assert.Empty(diagnostics);
-
-        foreach (var generatedSource in this.GeneratedSources ?? Array.Empty<string>())
-            Assert.Contains(result.SyntaxTrees, x => x.ToString() == generatedSource);
+    [Fact(DisplayName = "Using the `long` attribute on a NON `partial` class does report a diagnostic.")]
+    public async Task UsingTheLongAttributeOnANonPartialClassReportsADiagnostic()
+    {
+        // Arrange, act & assert.
+        await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
+        {
+            InputSources = new[]
+            {
+                """
+                [DIConstructorAttribute]
+                public class UserManager { }
+                """
+            },
+            ExpectedDiagnostics = new[]
+            {
+                new DiagnosticResult("KW001", "The class `UserManager` must be defined as `partial`")
+            }
+        }.VerifyAsync();
     }
 }

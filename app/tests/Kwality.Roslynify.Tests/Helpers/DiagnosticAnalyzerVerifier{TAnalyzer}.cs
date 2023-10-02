@@ -24,32 +24,61 @@
 // =====================================================================================================================
 namespace Kwality.Roslynify.Tests.Helpers;
 
+using System.Collections.Immutable;
+
 using Kwality.Roslynify.Tests.Helpers.Base;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
 
 using Xunit;
 
-internal sealed class SourceGeneratorVerifier<TGenerator> : RoslynComponentVerifier
-    where TGenerator : IIncrementalGenerator, new()
-{
-    public string[]? GeneratedSources { get; init; }
+public record DiagnosticResult(string Id, string Message);
 
-    public void Verify()
+internal sealed class DiagnosticAnalyzerVerifier<TAnalyzer> : RoslynComponentVerifier
+    where TAnalyzer : DiagnosticAnalyzer, new()
+{
+    public DiagnosticResult[]? ExpectedDiagnostics { get; init; }
+
+    public async Task VerifyAsync()
     {
         // Arrange.
         var compilation = this.CreateCompilation();
-        var generator = new TGenerator();
+        var analyzer = new TAnalyzer() as DiagnosticAnalyzer;
 
-        // Act.
-        CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var result, out var diagnostics);
+        // ACT.
+        var withAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create(analyzer));
+        var diagnostics = await withAnalyzers.GetAnalyzerDiagnosticsAsync().ConfigureAwait(false);
 
-        // Assert.
-        Assert.Empty(diagnostics);
+        // ASSERT.
+        this.AssertExpectedDiagnostics(diagnostics.ToArray());
+        this.AssertNoUnexpectedDiagnostic(diagnostics.ToArray());
+    }
 
-        foreach (var generatedSource in this.GeneratedSources ?? Array.Empty<string>())
-            Assert.Contains(result.SyntaxTrees, x => x.ToString() == generatedSource);
+    private void AssertExpectedDiagnostics(Diagnostic[] diagnostics)
+    {
+        if (this.ExpectedDiagnostics == null) return;
+
+        foreach (var (diagnosticId, diagnosticMessage) in this.ExpectedDiagnostics)
+            if (!diagnostics.Any(this.IsExpected))
+                Assert.Fail($"Diagnostic \"{diagnosticId}\" with message \"{diagnosticMessage}\" was not reported.");
+    }
+
+    private void AssertNoUnexpectedDiagnostic(IReadOnlyList<Diagnostic> diagnostics)
+    {
+        if (diagnostics.Count <= 0) return;
+
+        var diagnostic = diagnostics[0];
+        var diagnosticId = diagnostic.Id;
+        var diagnosticLocation = diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1;
+
+        if (!this.IsExpected(diagnostic))
+            Assert.Fail($"Unexpected diagnostic reported: \"{diagnosticId}\" at line {diagnosticLocation}");
+    }
+
+    private bool IsExpected(Diagnostic diagnostic)
+    {
+        return (this.ExpectedDiagnostics ?? Array.Empty<DiagnosticResult>()).Any(x =>
+            diagnostic.Id == x.Id && diagnostic.GetMessage() == x.Message);
     }
 }
