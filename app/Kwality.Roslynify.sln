@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify", "src\Kw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify.Tests", "tests\Kwality.Roslynify.Tests\Kwality.Roslynify.Tests.csproj", "{C6695BAE-19AC-4FF5-A9B9-7CAD2C054A19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify.Common", "src\Kwality.Roslynify.Common\Kwality.Roslynify.Common.csproj", "{57AA7ED6-C2C8-439C-81BB-767E066B61F4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,7 +29,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E5F481A5-4548-4AF8-A3E0-0D3859BC741C} = {19B5F2E5-C7D7-4F33-B835-A772601A6B47}
 		{C6695BAE-19AC-4FF5-A9B9-7CAD2C054A19} = {76A53B2A-C299-4B5C-8025-8148CBF4FD27}
-		{57AA7ED6-C2C8-439C-81BB-767E066B61F4} = {19B5F2E5-C7D7-4F33-B835-A772601A6B47}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E5F481A5-4548-4AF8-A3E0-0D3859BC741C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -42,9 +39,5 @@ Global
 		{C6695BAE-19AC-4FF5-A9B9-7CAD2C054A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6695BAE-19AC-4FF5-A9B9-7CAD2C054A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6695BAE-19AC-4FF5-A9B9-7CAD2C054A19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57AA7ED6-C2C8-439C-81BB-767E066B61F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57AA7ED6-C2C8-439C-81BB-767E066B61F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57AA7ED6-C2C8-439C-81BB-767E066B61F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57AA7ED6-C2C8-439C-81BB-767E066B61F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

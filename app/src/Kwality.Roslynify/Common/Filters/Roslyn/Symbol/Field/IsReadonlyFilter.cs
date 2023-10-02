@@ -22,16 +22,16 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Common.Filters.Roslyn.Symbol;
+namespace Kwality.Roslynify.Common.Filters.Roslyn.Symbol.Field;
 
 using Kwality.Roslynify.Common.Filters.Abstractions;
 
 using Microsoft.CodeAnalysis;
 
-public sealed class IsNotStaticFilter : IFilter<IFieldSymbol>
+public sealed class IsReadonlyFilter : IFilter<IFieldSymbol>
 {
     public IFieldSymbol? Apply(IFieldSymbol data)
     {
-        return data.IsStatic ? null : data;
+        return data.IsReadOnly ? data : null;
     }
 }

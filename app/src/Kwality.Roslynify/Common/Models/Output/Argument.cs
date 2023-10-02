@@ -22,20 +22,34 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Common.Filters.Roslyn.Symbol;
+namespace Kwality.Roslynify.Common.Models.Output;
 
-using Kwality.Roslynify.Common.Filters.Abstractions;
+using Kwality.Roslynify.Common.Internal;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-public sealed class IsNotInitializedFilter : IFilter<IFieldSymbol>
+public readonly struct Argument
 {
-    public IFieldSymbol? Apply(IFieldSymbol data)
+    public Argument(IFieldSymbol symbol)
     {
-        return data.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>()
-            .Any(x => x.Initializer != null)
-            ? null
-            : data;
+        this.FullyQualifiedTypeName = symbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        this.Name = FieldNameNormalizer.Normalize(symbol.Name);
+        this.FieldName = symbol.Name;
+    }
+    
+    public Argument(IParameterSymbol symbol)
+    {
+        this.FullyQualifiedTypeName = symbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        this.Name = FieldNameNormalizer.Normalize(symbol.Name);
+        this.FieldName = symbol.Name;
+    }
+
+    private string FullyQualifiedTypeName { get; }
+    public string Name { get; }
+    public string FieldName { get; }
+
+    public override string ToString()
+    {
+        return $"{this.FullyQualifiedTypeName} {this.Name}";
     }
 }

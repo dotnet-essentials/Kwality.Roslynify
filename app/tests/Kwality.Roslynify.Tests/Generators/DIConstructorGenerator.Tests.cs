@@ -49,7 +49,7 @@ public sealed class DIConstructorGeneratorTests
         // Arrange, act & assert.
         new SourceGeneratorVerifier<DIConstructorGenerator>
         {
-            InputSources = new [] { string.Empty }, GeneratedSources = new[] { markerAttribute }
+            InputSources = new[] { string.Empty }, GeneratedSources = new[] { markerAttribute }
         }.Verify();
     }
 
@@ -443,7 +443,7 @@ public sealed class DIConstructorGeneratorTests
             }
         }.Verify();
     }
-    
+
     [Fact(DisplayName = "Fields (`readonly`, initialized) are NOT injected in the constructor.")]
     public void Initialized_readonly_fields_are_not_injected_in_the_constructor()
     {
@@ -483,7 +483,7 @@ public sealed class DIConstructorGeneratorTests
             }
         }.Verify();
     }
-    
+
     [Fact(DisplayName = "Fields defined in all `partial` types are injected in the constructor.")]
     public void Fields_defined_in_all_partial_types_are_injected()
     {
@@ -513,7 +513,7 @@ public sealed class DIConstructorGeneratorTests
                 
                     private readonly ITimeProvider _timeProvider;
                 }
-                """,
+                """
             },
             GeneratedSources = new[]
             {
@@ -526,6 +526,63 @@ public sealed class DIConstructorGeneratorTests
                     {
                         this._userStore = @userStore;
                         this._timeProvider = @timeProvider;
+                    }
+                }
+
+                """,
+                markerAttribute
+            }
+        }.Verify();
+    }
+
+    [Fact(DisplayName = "The `base` constructor is called in the constructor.")]
+    public void The_base_constructor_is_called_in_generated_constructor()
+    {
+        // Arrange, act & assert.
+        new SourceGeneratorVerifier<DIConstructorGenerator>
+        {
+            InputSources = new[]
+            {
+                """
+                namespace Lib;
+
+                public interface IUserStore { }
+                public interface ITimeProvider { }
+                """,
+                """
+                namespace Lib;
+                 
+                [DIConstructor]
+                public partial class UserManager : ManagerBase
+                {
+                    private readonly IUserStore _userStore;
+                }
+                """,
+                """
+                namespace Lib;
+                 
+                public abstract class ManagerBase
+                {
+                    private readonly ITimeProvider _timeProvider;
+                    
+                    protected ManagerBase(ITimeProvider timeProvider)
+                    {
+                        this._timeProvider = timeProvider;
+                    }
+                }
+                """
+            },
+            GeneratedSources = new[]
+            {
+                """
+                namespace Lib;
+
+                partial class UserManager
+                {
+                    public UserManager(global::Lib.IUserStore @userStore, global::Lib.ITimeProvider @timeProvider)
+                        : base(@timeProvider)
+                    {
+                        this._userStore = @userStore;
                     }
                 }
 

@@ -22,27 +22,17 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Common.Models.Output;
+namespace Kwality.Roslynify.Common.Extensions.Roslyn.Symbol;
 
-using Kwality.Roslynify.Common.Internal;
+using Kwality.Roslynify.Common.Filters.Abstractions;
 
 using Microsoft.CodeAnalysis;
 
-public readonly struct Argument
+public static class MethodSymbolExtensions
 {
-    public Argument(IFieldSymbol symbol)
+    public static IEnumerable<IMethodSymbol> ApplyFilters(this IEnumerable<IMethodSymbol> symbols,
+        params IFilter<IMethodSymbol>[] filters)
     {
-        this.FullyQualifiedTypeName = symbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        this.Name = FieldNameNormalizer.Normalize(symbol.Name);
-        this.FieldName = symbol.Name;
-    }
-
-    private string FullyQualifiedTypeName { get; }
-    public string Name { get; }
-    public string FieldName { get; }
-
-    public override string ToString()
-    {
-        return $"{this.FullyQualifiedTypeName} {this.Name}";
+        return symbols.Where(symbol => filters.All(filter => filter.Apply(symbol) != null));
     }
 }
