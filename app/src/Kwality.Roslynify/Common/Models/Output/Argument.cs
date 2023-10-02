@@ -36,7 +36,7 @@ public readonly struct Argument
         this.Name = FieldNameNormalizer.Normalize(symbol.Name);
         this.FieldName = symbol.Name;
     }
-    
+
     public Argument(IParameterSymbol symbol)
     {
         this.FullyQualifiedTypeName = symbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);

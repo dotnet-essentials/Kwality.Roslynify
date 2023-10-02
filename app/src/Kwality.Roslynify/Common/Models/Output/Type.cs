@@ -84,17 +84,13 @@ public sealed class Type
         if (constructors != null)
         {
             var constructor = constructors.Any() && constructors.Count > 1 ? null : constructors.FirstOrDefault();
-       
-            if (constructor != null)
-            {
-                baseCtorParameters = constructor.Parameters.Select(p => new Argument(p));
-            }
+            if (constructor != null) baseCtorParameters = constructor.Parameters.Select(p => new Argument(p));
         }
-            
+
         var constructorArgs = this.symbol.GetFields()
             .ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter(), new IsNotInitializedFilter())
             .Select(x => new Argument(x)).ToList();
-        
+
         sBuilder.AppendLine($"{prefix}partial class {this.symbol.Name}");
         sBuilder.AppendLine($"{prefix}{{");
 
@@ -107,10 +103,8 @@ public sealed class Type
             sBuilder.AppendLine($"{prefix}        : base({string.Join(", ", baseCtorParameters.Select(x => x.Name))})");
         }
         else
-        {
             sBuilder.AppendLine($"{prefix}    public {this.symbol.Name}({string.Join(", ", constructorArgs)})");
-        }
-        
+
         sBuilder.AppendLine($"{prefix}    {{");
         foreach (var arg in constructorArgs) sBuilder.AppendLine($"{prefix}        this.{arg.FieldName} = {arg.Name};");
         sBuilder.AppendLine($"{prefix}    }}");
