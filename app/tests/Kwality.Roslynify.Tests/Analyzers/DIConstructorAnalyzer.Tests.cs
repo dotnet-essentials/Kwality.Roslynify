@@ -73,4 +73,47 @@ public sealed class DIConstructorAnalyzerTests
             }
         }.VerifyAsync();
     }
+
+    [Fact(DisplayName = "Using a class without any fields does report a diagnostic.")]
+    public async Task UsingAClassWithoutFields()
+    {
+        // Arrange, act & assert.
+        await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
+        {
+            InputSources = new[]
+            {
+                """
+                [DIConstructorAttribute]
+                public partial class UserManager { }
+                """
+            },
+            ExpectedDiagnostics = new[]
+            {
+                new DiagnosticResult("KW002",
+                    "The class `UserManager` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)")
+            }
+        }.VerifyAsync();
+    }
+
+    [Fact(DisplayName = "Using a class with fields does NOT report a diagnostic.")]
+    public async Task UsingAClassWithFields()
+    {
+        // Arrange, act & assert.
+        await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
+        {
+            InputSources = new[]
+            {
+                """
+                public interface IUserStore { }
+                """,
+                """
+                [DIConstructorAttribute]
+                public partial class UserManager
+                {
+                    private readonly IUserStore _userStore;
+                }
+                """
+            }
+        }.VerifyAsync();
+    }
 }

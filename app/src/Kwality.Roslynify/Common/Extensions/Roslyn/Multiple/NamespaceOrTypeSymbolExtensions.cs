@@ -24,11 +24,23 @@
 // =====================================================================================================================
 namespace Kwality.Roslynify.Common.Extensions.Roslyn.Multiple;
 
+using Kwality.Roslynify.Common.Extensions.Roslyn.Symbol;
+using Kwality.Roslynify.Common.Filters.Roslyn.Symbol;
+using Kwality.Roslynify.Common.Filters.Roslyn.Symbol.Field;
+using Kwality.Roslynify.Common.Models.Output;
+
 using Microsoft.CodeAnalysis;
 
 public static class NamespaceOrTypeSymbolExtensions
 {
-    public static IEnumerable<IFieldSymbol> GetFields(this INamespaceOrTypeSymbol symbol)
+    public static IEnumerable<Argument> GetConstructorArguments(this INamespaceOrTypeSymbol symbol)
+    {
+        return symbol.GetFields()
+            .ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter(), new IsNotInitializedFilter())
+            .Select(x => new Argument(x)).ToList();
+    }
+
+    private static IEnumerable<IFieldSymbol> GetFields(this INamespaceOrTypeSymbol symbol)
     {
         return symbol.GetMembers().OfType<IFieldSymbol>();
     }

@@ -29,7 +29,6 @@ using System.Text;
 using Kwality.Roslynify.Common.Extensions.Roslyn.Multiple;
 using Kwality.Roslynify.Common.Extensions.Roslyn.Symbol;
 using Kwality.Roslynify.Common.Filters.Roslyn.Symbol;
-using Kwality.Roslynify.Common.Filters.Roslyn.Symbol.Field;
 using Kwality.Roslynify.Common.Filters.Roslyn.Symbol.Method;
 
 using Microsoft.CodeAnalysis;
@@ -76,7 +75,7 @@ public sealed class Type
 
     private void WriteClass(StringBuilder sBuilder, string prefix)
     {
-        var constructorArguments = this.GetConstructorArguments();
+        var constructorArguments = this.symbol.GetConstructorArguments().ToList();
         var baseConstructorArguments = this.GetBaseConstructorArguments();
         sBuilder.AppendLine($"{prefix}partial class {this.symbol.Name}");
         sBuilder.AppendLine($"{prefix}{{");
@@ -100,13 +99,6 @@ public sealed class Type
             sBuilder.AppendLine($"{prefix}        this.{arg.FieldName} = {arg.Name};");
 
         sBuilder.AppendLine($"{prefix}    }}");
-    }
-
-    private IList<Argument> GetConstructorArguments()
-    {
-        return this.symbol.GetFields()
-            .ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter(), new IsNotInitializedFilter())
-            .Select(x => new Argument(x)).ToList();
     }
 
     private IList<Argument> GetBaseConstructorArguments()

@@ -25,7 +25,7 @@
 namespace Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Attribute.Base;
 
 using Kwality.Roslynify.Common.Constraints.Abstractions;
-using Kwality.Roslynify.Common.Extensions.Roslyn.Syntax.Attribute;
+using Kwality.Roslynify.Common.Extensions.Roslyn.Syntax;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

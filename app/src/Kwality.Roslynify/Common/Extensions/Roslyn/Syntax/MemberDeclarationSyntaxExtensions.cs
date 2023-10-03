@@ -22,24 +22,17 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Properties;
+namespace Kwality.Roslynify.Common.Extensions.Roslyn.Syntax;
 
-using Microsoft.CodeAnalysis;
+using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Attribute;
 
-internal static class DiagnosticDescriptors
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+public static class MemberDeclarationSyntaxExtensions
 {
-    private const string CategoryUsage = "Usage";
-
-    // ReSharper disable once InconsistentNaming
-    public static readonly DiagnosticDescriptor KW001 = new(nameof(KW001),
-        "The `DIConstructor` attribute can only be applied to `partial` classes",
-        "The class `{0}` must be defined as `partial`", CategoryUsage, DiagnosticSeverity.Error, true,
-        "The `DIConstructor` does only work when it's applied to a `partial` type.");
-
-    // ReSharper disable once InconsistentNaming
-    public static readonly DiagnosticDescriptor KW002 = new(nameof(KW002),
-        "The `DIConstructor` attribute only make sense on types which contains `readonly` (NOT `static`, NOT `initialized` fields)",
-        "The class `{0}` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)",
-        CategoryUsage, DiagnosticSeverity.Warning, true,
-        "The `DIConstructor` should only be placed on a classes that contains `readonly` (NOT `static`, NOT `initialized` fields).");
+    public static bool HasAttribute(this MemberDeclarationSyntax memberDeclarationSyntax, string attributeName)
+    {
+        return memberDeclarationSyntax.AttributeLists.Any(al =>
+            al.Attributes.Any(a => new HasNameConstraint(attributeName).IsTrueFor(a)));
+    }
 }

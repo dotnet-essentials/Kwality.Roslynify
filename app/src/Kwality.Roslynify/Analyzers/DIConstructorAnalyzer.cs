@@ -27,8 +27,8 @@ namespace Kwality.Roslynify.Analyzers;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Attribute;
 using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Type;
+using Kwality.Roslynify.Common.Extensions.Roslyn.Syntax;
 using Kwality.Roslynify.Properties;
 
 using Microsoft.CodeAnalysis;
@@ -41,7 +41,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 public sealed class DIConstructorAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(DiagnosticDescriptors.KW001);
+        ImmutableArray.Create(DiagnosticDescriptors.KW001, DiagnosticDescriptors.KW002);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -49,20 +49,34 @@ public sealed class DIConstructorAnalyzer : DiagnosticAnalyzer
                                                GeneratedCodeAnalysisFlags.ReportDiagnostics);
 
         context.EnableConcurrentExecution();
-        context.RegisterSyntaxNodeAction(CheckForAttributeOnPartialClass, SyntaxKind.ClassDeclaration);
+        context.RegisterSyntaxNodeAction(InspectType, SyntaxKind.ClassDeclaration);
     }
 
-    private static void CheckForAttributeOnPartialClass(SyntaxNodeAnalysisContext context)
+    private static void InspectType(SyntaxNodeAnalysisContext context)
     {
-        var classDeclaration = (ClassDeclarationSyntax)context.Node;
+        if (context.Node is not ClassDeclarationSyntax classDeclaration) return;
+
         var isPartial = new IsPartialConstraint().IsTrueFor(classDeclaration);
 
-        var hasAttribute = classDeclaration.AttributeLists.Any(al =>
-            al.Attributes.Any(a => new HasNameConstraint("DIConstructorAttribute").IsTrueFor(a)));
+        switch (classDeclaration.HasAttribute("DIConstructorAttribute"))
+        {
+            case true when !isPartial:
+                ReportDiagnostic(context, classDeclaration, DiagnosticDescriptors.KW001);
 
-        if (!hasAttribute || isPartial) return;
+                break;
+            case true when isPartial && !classDeclaration.GetConstructorArguments(context).Any():
+                ReportDiagnostic(context, classDeclaration, DiagnosticDescriptors.KW002);
 
-        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.KW001, classDeclaration.GetLocation(),
-            classDeclaration.Identifier.ValueText));
+                break;
+        }
+    }
+
+    private static void ReportDiagnostic(SyntaxNodeAnalysisContext context,
+        BaseTypeDeclarationSyntax typeDeclarationSyntax, DiagnosticDescriptor diagnosticDescriptor)
+    {
+        var diagnostic = Diagnostic.Create(diagnosticDescriptor, typeDeclarationSyntax.GetLocation(),
+            typeDeclarationSyntax.Identifier.ValueText);
+
+        context.ReportDiagnostic(diagnostic);
     }
 }

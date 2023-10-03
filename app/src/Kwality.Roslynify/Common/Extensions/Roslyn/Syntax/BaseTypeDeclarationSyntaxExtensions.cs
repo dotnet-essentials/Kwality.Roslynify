@@ -22,24 +22,26 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Properties;
+namespace Kwality.Roslynify.Common.Extensions.Roslyn.Syntax;
+
+using Kwality.Roslynify.Common.Extensions.Roslyn.Multiple;
+using Kwality.Roslynify.Common.Models.Output;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 
-internal static class DiagnosticDescriptors
+public static class BaseTypeDeclarationSyntaxExtensions
 {
-    private const string CategoryUsage = "Usage";
+    public static IEnumerable<Argument> GetConstructorArguments(this BaseTypeDeclarationSyntax syntax,
+        SyntaxNodeAnalysisContext context)
+    {
+        return syntax.GetSymbol(context) is { } symbol ? symbol.GetConstructorArguments() : Array.Empty<Argument>();
+    }
 
-    // ReSharper disable once InconsistentNaming
-    public static readonly DiagnosticDescriptor KW001 = new(nameof(KW001),
-        "The `DIConstructor` attribute can only be applied to `partial` classes",
-        "The class `{0}` must be defined as `partial`", CategoryUsage, DiagnosticSeverity.Error, true,
-        "The `DIConstructor` does only work when it's applied to a `partial` type.");
-
-    // ReSharper disable once InconsistentNaming
-    public static readonly DiagnosticDescriptor KW002 = new(nameof(KW002),
-        "The `DIConstructor` attribute only make sense on types which contains `readonly` (NOT `static`, NOT `initialized` fields)",
-        "The class `{0}` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)",
-        CategoryUsage, DiagnosticSeverity.Warning, true,
-        "The `DIConstructor` should only be placed on a classes that contains `readonly` (NOT `static`, NOT `initialized` fields).");
+    private static INamedTypeSymbol? GetSymbol(this BaseTypeDeclarationSyntax syntax, SyntaxNodeAnalysisContext context)
+    {
+        return context.SemanticModel.GetDeclaredSymbol(syntax);
+    }
 }

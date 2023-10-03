@@ -33,7 +33,7 @@ using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Attribute;
 using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Type;
 using Kwality.Roslynify.Common.Extensions.Roslyn.Context;
 using Kwality.Roslynify.Common.Extensions.Roslyn.Symbol;
-using Kwality.Roslynify.Common.Extensions.Roslyn.Syntax.Attribute;
+using Kwality.Roslynify.Common.Extensions.Roslyn.Syntax;
 using Kwality.Roslynify.Common.Models.Output;
 
 using Microsoft.CodeAnalysis;
