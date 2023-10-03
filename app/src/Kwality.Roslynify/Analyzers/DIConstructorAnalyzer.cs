@@ -25,6 +25,7 @@
 namespace Kwality.Roslynify.Analyzers;
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Attribute;
 using Kwality.Roslynify.Common.Constraints.Roslyn.Syntax.Type;
@@ -36,6 +37,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class DIConstructorAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
