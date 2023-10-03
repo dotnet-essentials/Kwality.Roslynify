@@ -64,7 +64,7 @@ public sealed class DIConstructorAnalyzer : DiagnosticAnalyzer
                 ReportDiagnostic(context, classDeclaration, DiagnosticDescriptors.KW001);
 
                 break;
-            case true when isPartial && !classDeclaration.GetConstructorArguments(context).Any():
+            case true when isPartial && !classDeclaration.HasConstructorArguments(context):
                 ReportDiagnostic(context, classDeclaration, DiagnosticDescriptors.KW002);
 
                 break;

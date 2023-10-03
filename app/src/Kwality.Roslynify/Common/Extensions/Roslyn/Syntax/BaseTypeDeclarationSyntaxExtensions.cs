@@ -25,7 +25,6 @@
 namespace Kwality.Roslynify.Common.Extensions.Roslyn.Syntax;
 
 using Kwality.Roslynify.Common.Extensions.Roslyn.Multiple;
-using Kwality.Roslynify.Common.Models.Output;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -34,10 +33,12 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 public static class BaseTypeDeclarationSyntaxExtensions
 {
-    public static IEnumerable<Argument> GetConstructorArguments(this BaseTypeDeclarationSyntax syntax,
-        SyntaxNodeAnalysisContext context)
+    public static bool HasConstructorArguments(this BaseTypeDeclarationSyntax syntax, SyntaxNodeAnalysisContext context)
     {
-        return syntax.GetSymbol(context) is { } symbol ? symbol.GetConstructorArguments() : Array.Empty<Argument>();
+        if (syntax.GetSymbol(context) is not { } symbol) return false;
+        if (symbol.GetConstructorArguments().Any()) return true;
+
+        return symbol.BaseType != null && symbol.BaseType.GetConstructorArguments().Any();
     }
 
     private static INamedTypeSymbol? GetSymbol(this BaseTypeDeclarationSyntax syntax, SyntaxNodeAnalysisContext context)

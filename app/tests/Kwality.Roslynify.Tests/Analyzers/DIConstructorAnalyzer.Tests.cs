@@ -116,4 +116,31 @@ public sealed class DIConstructorAnalyzerTests
             }
         }.VerifyAsync();
     }
+
+    [Fact(DisplayName = "Using a class that calls a base constructor with arguments does NOT report a diagnostic.")]
+    public async Task UsingAClassThatCallsABaseClassWithArguments()
+    {
+        // Arrange, act & assert.
+        await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
+        {
+            InputSources = new[]
+            {
+                """
+                public interface IUserStore { }
+                """,
+                """
+                public abstract class ManagerBase
+                {
+                    private readonly IUserStore userStore;
+                
+                    protected ManagerBase(IUserStore userStore) { }
+                }
+                """,
+                """
+                [DIConstructorAttribute]
+                public partial class UserManager : ManagerBase { }
+                """
+            }
+        }.VerifyAsync();
+    }
 }
