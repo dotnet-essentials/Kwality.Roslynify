@@ -33,7 +33,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 using Xunit;
 
-public record DiagnosticResult(string Id, string Message);
+public record DiagnosticResult(string Id, string Message, DiagnosticSeverity Severity);
 
 internal sealed class DiagnosticAnalyzerVerifier<TAnalyzer> : RoslynComponentVerifier
     where TAnalyzer : DiagnosticAnalyzer, new()
@@ -59,7 +59,7 @@ internal sealed class DiagnosticAnalyzerVerifier<TAnalyzer> : RoslynComponentVer
     {
         if (this.ExpectedDiagnostics == null) return;
 
-        foreach (var (diagnosticId, diagnosticMessage) in this.ExpectedDiagnostics)
+        foreach (var (diagnosticId, diagnosticMessage, _) in this.ExpectedDiagnostics)
             if (!diagnostics.Any(this.IsExpected))
                 Assert.Fail($"Diagnostic \"{diagnosticId}\" with message \"{diagnosticMessage}\" was not reported.");
     }
@@ -79,6 +79,6 @@ internal sealed class DiagnosticAnalyzerVerifier<TAnalyzer> : RoslynComponentVer
     private bool IsExpected(Diagnostic diagnostic)
     {
         return (this.ExpectedDiagnostics ?? Array.Empty<DiagnosticResult>()).Any(x =>
-            diagnostic.Id == x.Id && diagnostic.GetMessage() == x.Message);
+            diagnostic.Id == x.Id && diagnostic.GetMessage() == x.Message && diagnostic.Severity == x.Severity);
     }
 }

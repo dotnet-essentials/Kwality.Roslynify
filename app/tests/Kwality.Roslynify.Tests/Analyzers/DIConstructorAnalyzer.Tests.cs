@@ -29,6 +29,8 @@ using System.Diagnostics.CodeAnalysis;
 using Kwality.Roslynify.Analyzers;
 using Kwality.Roslynify.Tests.Helpers;
 
+using Microsoft.CodeAnalysis;
+
 using Xunit;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -49,7 +51,8 @@ public sealed class DIConstructorAnalyzerTests
             },
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult("KW001", "The class `UserManager` must be defined as `partial`")
+                new DiagnosticResult("KW001", "The class `UserManager` must be defined as `partial`",
+                    DiagnosticSeverity.Error)
             }
         }.VerifyAsync();
     }
@@ -69,7 +72,8 @@ public sealed class DIConstructorAnalyzerTests
             },
             ExpectedDiagnostics = new[]
             {
-                new DiagnosticResult("KW001", "The class `UserManager` must be defined as `partial`")
+                new DiagnosticResult("KW001", "The class `UserManager` must be defined as `partial`",
+                    DiagnosticSeverity.Error)
             }
         }.VerifyAsync();
     }
@@ -90,7 +94,8 @@ public sealed class DIConstructorAnalyzerTests
             ExpectedDiagnostics = new[]
             {
                 new DiagnosticResult("KW002",
-                    "The class `UserManager` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)")
+                    "The class `UserManager` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)",
+                    DiagnosticSeverity.Warning)
             }
         }.VerifyAsync();
     }
@@ -142,7 +147,8 @@ public sealed class DIConstructorAnalyzerTests
             ExpectedDiagnostics = new[]
             {
                 new DiagnosticResult("KW002",
-                    "The class `UserManager` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)")
+                    "The class `UserManager` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)",
+                    DiagnosticSeverity.Warning)
             }
         }.VerifyAsync();
     }
