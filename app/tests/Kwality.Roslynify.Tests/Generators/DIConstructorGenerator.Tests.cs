@@ -413,7 +413,7 @@ public sealed class DIConstructorGeneratorTests
         }.Verify();
     }
 
-    [Fact(DisplayName = "Fields (`readonly`, initialized) are injected in the constructor.")]
+    [Fact(DisplayName = "Fields (`readonly`, initialized) are NOT injected in the constructor.")]
     public void ReadonlyInitializedFieldsAreNotInjectedInTheConstructor()
     {
         // Arrange, act & assert.
