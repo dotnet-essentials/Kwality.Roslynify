@@ -33,7 +33,7 @@ using Microsoft.CodeAnalysis;
 
 public static class NamespaceOrTypeSymbolExtensions
 {
-    public static IEnumerable<Argument> GetConstructorArguments(this INamespaceOrTypeSymbol symbol)
+    public static IEnumerable<Argument> MapConstructorArgumentsFromFields(this INamespaceOrTypeSymbol symbol)
     {
         return symbol.GetFields()
             .ApplyFilters(new IsReadonlyFilter(), new IsNotStaticFilter(), new IsNotInitializedFilter())

@@ -117,8 +117,8 @@ public sealed class DIConstructorAnalyzerTests
         }.VerifyAsync();
     }
 
-    [Fact(DisplayName = "Using a class that calls a base constructor with arguments does NOT report a diagnostic.")]
-    public async Task UsingAClassThatCallsABaseClassWithArgumentsReportsNoDiagnostic()
+    [Fact(DisplayName = "Using a class that calls a `default` base constructor does report a diagnostic.")]
+    public async Task UsingAClassThatCallsADefaultBaseClassReportsNoDiagnostic()
     {
         // Arrange, act & assert.
         await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
@@ -131,8 +131,36 @@ public sealed class DIConstructorAnalyzerTests
                 """
                 public abstract class ManagerBase
                 {
-                    private readonly IUserStore userStore;
-                
+                    protected ManagerBase() { }
+                }
+                """,
+                """
+                [DIConstructorAttribute]
+                public partial class UserManager : ManagerBase { }
+                """
+            },
+            ExpectedDiagnostics = new[]
+            {
+                new DiagnosticResult("KW002",
+                    "The class `UserManager` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)")
+            }
+        }.VerifyAsync();
+    }
+
+    [Fact(DisplayName = "Using a class that calls a base constructor does NOT report a diagnostic.")]
+    public async Task UsingAClassThatCallsABaseConstructorReportsNoDiagnostic()
+    {
+        // Arrange, act & assert.
+        await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
+        {
+            InputSources = new[]
+            {
+                """
+                public interface IUserStore { }
+                """,
+                """
+                public abstract class ManagerBase
+                {
                     protected ManagerBase(IUserStore userStore) { }
                 }
                 """,

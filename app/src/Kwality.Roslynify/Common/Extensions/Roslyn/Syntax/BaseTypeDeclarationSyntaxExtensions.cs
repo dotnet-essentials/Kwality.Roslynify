@@ -36,9 +36,9 @@ public static class BaseTypeDeclarationSyntaxExtensions
     public static bool HasConstructorArguments(this BaseTypeDeclarationSyntax syntax, SyntaxNodeAnalysisContext context)
     {
         if (syntax.GetSymbol(context) is not { } symbol) return false;
-        if (symbol.GetConstructorArguments().Any()) return true;
+        if (symbol.MapConstructorArgumentsFromFields().Any()) return true;
 
-        return symbol.BaseType != null && symbol.BaseType.GetConstructorArguments().Any();
+        return symbol.BaseType != null && symbol.BaseType.Constructors.Any(x => x.Parameters.Any());
     }
 
     private static INamedTypeSymbol? GetSymbol(this BaseTypeDeclarationSyntax syntax, SyntaxNodeAnalysisContext context)
