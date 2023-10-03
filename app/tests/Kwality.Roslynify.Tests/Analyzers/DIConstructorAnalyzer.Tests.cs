@@ -75,7 +75,7 @@ public sealed class DIConstructorAnalyzerTests
     }
 
     [Fact(DisplayName = "Using a class without any fields does report a diagnostic.")]
-    public async Task UsingAClassWithoutFields()
+    public async Task UsingAClassWithoutFieldsReportsADiagnostic()
     {
         // Arrange, act & assert.
         await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
@@ -96,7 +96,7 @@ public sealed class DIConstructorAnalyzerTests
     }
 
     [Fact(DisplayName = "Using a class with fields does NOT report a diagnostic.")]
-    public async Task UsingAClassWithFields()
+    public async Task UsingAClassWithFieldsReportsNoDiagnostic()
     {
         // Arrange, act & assert.
         await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
@@ -118,7 +118,7 @@ public sealed class DIConstructorAnalyzerTests
     }
 
     [Fact(DisplayName = "Using a class that calls a base constructor with arguments does NOT report a diagnostic.")]
-    public async Task UsingAClassThatCallsABaseClassWithArguments()
+    public async Task UsingAClassThatCallsABaseClassWithArgumentsReportsNoDiagnostic()
     {
         // Arrange, act & assert.
         await new DiagnosticAnalyzerVerifier<DIConstructorAnalyzer>
