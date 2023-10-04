@@ -30,13 +30,13 @@ using Microsoft.CodeAnalysis;
 
 public sealed class IsNotStaticFilter : IFilter<IFieldSymbol>, IFilter<IMethodSymbol>
 {
-    public IFieldSymbol? Apply(IFieldSymbol data)
+    public IFieldSymbol? Apply(IFieldSymbol element)
     {
-        return data.IsStatic ? null : data;
+        return element.IsStatic ? null : element;
     }
 
-    public IMethodSymbol? Apply(IMethodSymbol data)
+    public IMethodSymbol? Apply(IMethodSymbol element)
     {
-        return data.IsStatic ? null : data;
+        return element.IsStatic ? null : element;
     }
 }

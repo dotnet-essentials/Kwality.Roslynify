@@ -30,8 +30,8 @@ using Microsoft.CodeAnalysis;
 
 public sealed class IsReadonlyFilter : IFilter<IFieldSymbol>
 {
-    public IFieldSymbol? Apply(IFieldSymbol data)
+    public IFieldSymbol? Apply(IFieldSymbol element)
     {
-        return data.IsReadOnly ? data : null;
+        return element.IsReadOnly ? element : null;
     }
 }

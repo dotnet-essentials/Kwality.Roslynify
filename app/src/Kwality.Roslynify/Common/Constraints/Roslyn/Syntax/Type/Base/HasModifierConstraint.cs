@@ -39,8 +39,8 @@ public abstract class HasModifierConstraint : IConstraint<TypeDeclarationSyntax>
         this.syntaxKind = syntaxKind;
     }
 
-    public bool IsTrueFor(TypeDeclarationSyntax data)
+    public bool IsTrueFor(TypeDeclarationSyntax element)
     {
-        return data.Modifiers.Any(x => x.IsKind(this.syntaxKind));
+        return element.Modifiers.Any(x => x.IsKind(this.syntaxKind));
     }
 }

@@ -39,8 +39,8 @@ public abstract class IsAppliedToKindConstraint : IConstraint<AttributeSyntax>
         this.typeKind = typeKind;
     }
 
-    public bool IsTrueFor(AttributeSyntax data)
+    public bool IsTrueFor(AttributeSyntax element)
     {
-        return data.GetTargetType() == this.typeKind;
+        return element.GetTargetType() == this.typeKind;
     }
 }

@@ -31,11 +31,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 public sealed class IsNotInitializedFilter : IFilter<IFieldSymbol>
 {
-    public IFieldSymbol? Apply(IFieldSymbol data)
+    public IFieldSymbol? Apply(IFieldSymbol element)
     {
-        return data.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>()
+        return element.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>()
             .Any(x => x.Initializer != null)
             ? null
-            : data;
+            : element;
     }
 }

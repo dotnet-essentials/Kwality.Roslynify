@@ -30,8 +30,8 @@ using Microsoft.CodeAnalysis;
 
 public sealed class HasParametersFilter : IFilter<IMethodSymbol>
 {
-    public IMethodSymbol? Apply(IMethodSymbol data)
+    public IMethodSymbol? Apply(IMethodSymbol element)
     {
-        return data.Parameters.Any() ? data : null;
+        return element.Parameters.Any() ? element : null;
     }
 }

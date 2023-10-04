@@ -24,7 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.Roslynify.Common.Filters.Abstractions;
 
-public interface IFilter<TData> where TData : class
+public interface IFilter<TElement> where TElement : class
 {
-    TData? Apply(TData data);
+    TElement? Apply(TElement element);
 }

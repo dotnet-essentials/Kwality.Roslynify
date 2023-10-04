@@ -31,8 +31,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 public sealed class IsAttributeConstraint : IConstraint<SyntaxNode>
 {
-    public bool IsTrueFor(SyntaxNode data)
+    public bool IsTrueFor(SyntaxNode element)
     {
-        return data is AttributeSyntax;
+        return element is AttributeSyntax;
     }
 }

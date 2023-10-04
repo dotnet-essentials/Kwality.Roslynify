@@ -24,8 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.Roslynify.Common.Constraints.Abstractions;
 
-public interface IConstraint<in TData> where TData : class
+public interface IConstraint<in TElement> where TElement : class
 {
     // ReSharper disable once UnusedMemberInSuper.Global
-    bool IsTrueFor(TData data);
+    bool IsTrueFor(TElement element);
 }

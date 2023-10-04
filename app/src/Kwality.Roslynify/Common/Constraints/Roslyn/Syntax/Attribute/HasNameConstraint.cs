@@ -38,9 +38,9 @@ public sealed class HasNameConstraint : IConstraint<AttributeSyntax>
         this.name = AttributeNameNormalizer.Normalize(name);
     }
 
-    public bool IsTrueFor(AttributeSyntax data)
+    public bool IsTrueFor(AttributeSyntax element)
     {
-        return data.Name switch
+        return element.Name switch
         {
             SimpleNameSyntax ins => AttributeNameNormalizer.Normalize(ins.Identifier.Text) == this.name,
             QualifiedNameSyntax qns => AttributeNameNormalizer.Normalize(qns.Right.Identifier.Text) == this.name,
