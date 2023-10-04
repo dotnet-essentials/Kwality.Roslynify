@@ -2,7 +2,7 @@
 
 ### New Rules
 
- Rule ID | Category | Severity | Notes                                         
----------|----------|----------|-----------------------------------------------
- KW001   | Usage    | Error    | UseDIConstructorAttributeOnNonPartialClass    
- KW002   | Usage    | Warning  | UseDIConstructorAttributeOnClassWithoutFields 
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
+ KW001  | Usage    | Error    | UseDIConstructorAttributeOnNonPartialClass    
+ KW002  | Usage    | Warning  | UseDIConstructorAttributeOnClassWithoutConstructorArguments
