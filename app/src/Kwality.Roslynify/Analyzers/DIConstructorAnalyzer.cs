@@ -54,8 +54,7 @@ public sealed class DIConstructorAnalyzer : DiagnosticAnalyzer
 
     private static void InspectType(SyntaxNodeAnalysisContext context)
     {
-        if (context.Node is not ClassDeclarationSyntax classDeclaration) return;
-
+        var classDeclaration = (ClassDeclarationSyntax)context.Node;
         var isPartial = new IsPartialConstraint().IsTrueFor(classDeclaration);
 
         switch (classDeclaration.HasAttribute("DIConstructorAttribute"))
