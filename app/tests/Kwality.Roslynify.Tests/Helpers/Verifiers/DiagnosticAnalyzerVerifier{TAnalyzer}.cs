@@ -22,11 +22,11 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Tests.Helpers;
+namespace Kwality.Roslynify.Tests.Helpers.Verifiers;
 
 using System.Collections.Immutable;
 
-using Kwality.Roslynify.Tests.Helpers.Base;
+using Kwality.Roslynify.Tests.Helpers.Verifiers.Base;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;

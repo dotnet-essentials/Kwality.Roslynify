@@ -22,22 +22,36 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Tests.Helpers.Base;
+namespace Kwality.Roslynify.Common.Options;
 
-using System.Reflection;
+using System.Collections.Immutable;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
 
-public abstract class RoslynComponentVerifier
+public sealed class OptionsReader
 {
-    public string[]? InputSources { get; init; }
+    private readonly AnalyzerConfigOptionsProvider provider;
+    private readonly SyntaxTree syntaxTree;
 
-    protected Compilation CreateCompilation()
+    public OptionsReader(AnalyzerConfigOptionsProvider provider, SyntaxTree syntaxTree)
     {
-        return CSharpCompilation.Create("Lib",
-            (this.InputSources ?? Array.Empty<string>()).Select(x => CSharpSyntaxTree.ParseText(x)),
-            new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        this.provider = provider;
+        this.syntaxTree = syntaxTree;
+    }
+
+    public ImmutableHashSet<int> ReadInts(string key)
+    {
+        if (this.GetValue(key) is { } value)
+            return value.Split(',').Select(x => x.Trim()).Select(int.Parse).ToImmutableHashSet();
+
+        return new HashSet<int>().ToImmutableHashSet();
+    }
+
+    private string? GetValue(string key)
+    {
+        var options = this.provider.GetOptions(this.syntaxTree);
+
+        return options.TryGetValue(key, out var value) ? value : string.Empty;
     }
 }

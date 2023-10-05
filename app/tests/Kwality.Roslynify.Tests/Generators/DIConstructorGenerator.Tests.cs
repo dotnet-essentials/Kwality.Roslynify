@@ -27,7 +27,7 @@ namespace Kwality.Roslynify.Tests.Generators;
 using System.Diagnostics.CodeAnalysis;
 
 using Kwality.Roslynify.Generators;
-using Kwality.Roslynify.Tests.Helpers;
+using Kwality.Roslynify.Tests.Helpers.Verifiers;
 
 using Xunit;
 

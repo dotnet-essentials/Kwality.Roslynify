@@ -28,18 +28,31 @@ using Microsoft.CodeAnalysis;
 
 internal static class DiagnosticDescriptors
 {
-    private const string CategoryUsage = "Usage";
+    private const string Usage = "Usage";
+    private const string Documentation = "Documentation";
 
     // ReSharper disable once InconsistentNaming
     public static readonly DiagnosticDescriptor KW001 = new(nameof(KW001),
         "The `DIConstructor` attribute can only be applied to `partial` classes",
-        "The class `{0}` must be defined as `partial`", CategoryUsage, DiagnosticSeverity.Error, true,
+        "The class `{0}` must be defined as `partial`", Usage, DiagnosticSeverity.Error, true,
         "The `DIConstructor` does only work when it's applied to a `partial` type.");
 
     // ReSharper disable once InconsistentNaming
     public static readonly DiagnosticDescriptor KW002 = new(nameof(KW002),
         "The `DIConstructor` attribute only make sense on types which contains `readonly` (NOT `static`, NOT `initialized` fields)",
-        "The class `{0}` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)",
-        CategoryUsage, DiagnosticSeverity.Warning, true,
+        "The class `{0}` must at least have one `readonly` field (NOT `static`, NOT `initialized` fields)", Usage,
+        DiagnosticSeverity.Warning, true,
         "The `DIConstructor` should only be placed on a classes that contains `readonly` (NOT `static`, NOT `initialized` fields).");
+
+    // ReSharper disable once InconsistentNaming
+    public static readonly DiagnosticDescriptor KW003 = new(nameof(KW003),
+        "The `ProducesResponseType` must be be used with 2 arguments",
+        "The attribute `ProducesResponseType` must have a valid type", Documentation, DiagnosticSeverity.Warning, true,
+        "The `ProducesResponseType` must contain the model that it will return.");
+
+    // ReSharper disable once InconsistentNaming
+    public static readonly DiagnosticDescriptor KW004 = new(nameof(KW004),
+        "The `ProducesResponseType` indicates that a status code is returned that's disallowed",
+        "The method `{0}` returns the status code `{1}` which isn't allowed", Usage, DiagnosticSeverity.Error, true,
+        "The `ProducesResponseType` must indicate an allowed status code.");
 }

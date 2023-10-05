@@ -27,7 +27,7 @@ namespace Kwality.Roslynify.Tests.Analyzers;
 using System.Diagnostics.CodeAnalysis;
 
 using Kwality.Roslynify.Analyzers;
-using Kwality.Roslynify.Tests.Helpers;
+using Kwality.Roslynify.Tests.Helpers.Verifiers;
 
 using Microsoft.CodeAnalysis;
 

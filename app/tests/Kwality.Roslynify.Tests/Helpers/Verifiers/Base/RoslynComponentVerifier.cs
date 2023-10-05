@@ -22,34 +22,24 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.Roslynify.Tests.Helpers;
+namespace Kwality.Roslynify.Tests.Helpers.Verifiers.Base;
 
-using Kwality.Roslynify.Tests.Helpers.Base;
-
+using Microsoft.AspNetCore.Builder;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-using Xunit;
-
-internal sealed class SourceGeneratorVerifier<TGenerator> : RoslynComponentVerifier
-    where TGenerator : IIncrementalGenerator, new()
+public abstract class RoslynComponentVerifier
 {
-    public string[]? GeneratedSources { get; init; }
+    public string[]? InputSources { get; init; }
 
-    public void Verify()
+    protected Compilation CreateCompilation()
     {
-        // Arrange.
-        var compilation = this.CreateCompilation();
-        var generator = new TGenerator();
-
-        // Act.
-        CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var result, out var diagnostics);
-
-        // Assert.
-        Assert.Empty(diagnostics);
-
-        foreach (var generatedSource in this.GeneratedSources ?? Array.Empty<string>())
-            Assert.Contains(result.SyntaxTrees, x => x.ToString() == generatedSource);
+        return CSharpCompilation.Create("Lib",
+            (this.InputSources ?? Array.Empty<string>()).Select(x => CSharpSyntaxTree.ParseText(x)),
+            MetadataReferenceBuilder.BuildRecursive(typeof(GenericHostBuilderExtensions),
+                typeof(MvcServiceCollectionExtensions), typeof(HttpsPolicyBuilderExtensions)),
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 }
