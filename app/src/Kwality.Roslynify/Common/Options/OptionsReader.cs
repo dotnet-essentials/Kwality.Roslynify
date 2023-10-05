@@ -52,6 +52,6 @@ public sealed class OptionsReader
     {
         var options = this.provider.GetOptions(this.syntaxTree);
 
-        return options.TryGetValue(key, out var value) ? value : string.Empty;
+        return options.TryGetValue(key, out var value) ? value : null;
     }
 }
