@@ -10,6 +10,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000. Repository configurati
 		..\LICENSE = ..\LICENSE
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "100. Source.", "100. Source.", "{A1A650ED-E64A-4218-86E1-75F3348CCCC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify", "Kwality.Roslynify\Kwality.Roslynify.csproj", "{635C4571-FE08-4B91-838A-741F23FFD25B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "200. Tests.", "200. Tests.", "{EF5B45C6-45F3-47D8-990C-F63671F00CD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify.Tests", "Kwality.Roslynify.Tests\Kwality.Roslynify.Tests.csproj", "{9B6B1759-9D76-4E39-92CF-C21F88C9FFC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.Roslynify.E2E", "Kwality.Roslynify.E2E\Kwality.Roslynify.E2E.csproj", "{47477192-48FC-4517-A4DA-065FF90B2C55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,7 +29,21 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{635C4571-FE08-4B91-838A-741F23FFD25B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{635C4571-FE08-4B91-838A-741F23FFD25B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{635C4571-FE08-4B91-838A-741F23FFD25B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{635C4571-FE08-4B91-838A-741F23FFD25B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B6B1759-9D76-4E39-92CF-C21F88C9FFC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B6B1759-9D76-4E39-92CF-C21F88C9FFC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B6B1759-9D76-4E39-92CF-C21F88C9FFC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B6B1759-9D76-4E39-92CF-C21F88C9FFC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47477192-48FC-4517-A4DA-065FF90B2C55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47477192-48FC-4517-A4DA-065FF90B2C55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47477192-48FC-4517-A4DA-065FF90B2C55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47477192-48FC-4517-A4DA-065FF90B2C55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{635C4571-FE08-4B91-838A-741F23FFD25B} = {A1A650ED-E64A-4218-86E1-75F3348CCCC9}
+		{9B6B1759-9D76-4E39-92CF-C21F88C9FFC1} = {EF5B45C6-45F3-47D8-990C-F63671F00CD3}
 	EndGlobalSection
 EndGlobal
